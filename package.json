@@ -1,6 +1,6 @@
 {
   "name": "iro-transparency-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Adds comprehensive transparency support to iro.js",
   "main": "dist/iro-transparency-plugin.js",
   "files": [

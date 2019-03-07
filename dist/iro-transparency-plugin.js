@@ -1,6 +1,6 @@
 /*!
- * iro-transparency-plugin v1.0.0
- * iro.js plugin to dynamically update CSS rules whenever the selected color changes
+ * iro-transparency-plugin v1.0.1
+ * Adds comprehensive transparency support to iro.js
  * 2019 James Daniel
  * Licensed under MPL 2.0
  * github.com/jaames/iro-transparency-plugin
@@ -355,7 +355,7 @@ var TransparencyPlugin = function TransparencyPlugin(iro, pluginOptions) {
     } else {
       set.call(this, value);
     }
-  }; // add extra properties to color method
+  }; // add extra properties to color class
 
 
   Object.defineProperties(iro.Color.prototype, {
@@ -482,7 +482,7 @@ var TransparencyPlugin = function TransparencyPlugin(iro, pluginOptions) {
   });
   iro.ui.TransparencySlider = TransparencySlider;
   iro.transparencyPlugin = {
-    version: "1.0.0"
+    version: "1.0.1"
   };
 };
 
