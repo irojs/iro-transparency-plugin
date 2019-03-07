@@ -1,6 +1,4 @@
-<h1 align="center">iro-transparency-plugin</h1>
-
-<br/>
+<h1 align="center"><img height="330" src="https://raw.githubusercontent.com/jaames/iro-transparency-plugin/master/assets/screenshot.png"/><br/>iro-transparency-plugin</h1>
 
 <p align="center">
   <b>Adds comprehensive transparency support to <a href="https://github.com/jaames/iro.js">iro.js</a></b>
