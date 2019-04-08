@@ -1,5 +1,5 @@
 /*!
- * iro-transparency-plugin v1.0.1
+ * iro-transparency-plugin v1.0.2
  * Adds comprehensive transparency support to iro.js
  * 2019 James Daniel
  * Licensed under MPL 2.0
@@ -160,7 +160,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         var cornerRadius = sliderHeight / 2;
         var range = width - cornerRadius * 2;
         var hslString = props.color.hslString;
-        var alpha = props.color.hsv.a;
+        var alpha = props.color.hsva.a;
         return h("svg", {
           class: "iro__slider iro__slider--transparency",
           width: width,
@@ -285,26 +285,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
- // Some regular expressions for rgb() and hsl() Colors are borrowed from tinyColor
-// https://github.com/bgrins/TinyColor
-// https://www.w3.org/TR/css3-values/#integers
 
-var CSS_INTEGER = "[-\\+]?\\d+%?"; // http://www.w3.org/TR/css3-values/#number-value
-
-var CSS_NUMBER = "[-\\+]?\\d*\\.\\d+%?"; // Allow positive/negative integer/number. Don't capture the either/or, just the entire outcome
-
-var CSS_UNIT = "(?:".concat(CSS_INTEGER, ")|(?:").concat(CSS_NUMBER, ")"); // Parse function params
-// Parens and commas are optional, and this also allows for whitespace between numbers
-
-var PERMISSIVE_MATCH_4 = "[\\s|\\(]+(".concat(CSS_UNIT, ")[,|\\s]+(").concat(CSS_UNIT, ")[,|\\s]+(").concat(CSS_UNIT, ")[,|\\s]+(").concat(CSS_UNIT, ")\\s*\\)?"); // Regex patterns for functional colors
-
-var REGEX_FUNCTIONAL_RGBA = new RegExp("rgba".concat(PERMISSIVE_MATCH_4));
-var REGEX_FUNCTIONAL_HSLA = new RegExp("hsla".concat(PERMISSIVE_MATCH_4));
-var HEX_START = "^(?:#?|0x?)";
-var HEX_INT_SINGLE = "([0-9a-fA-F]{1})";
-var HEX_INT_DOUBLE = "([0-9a-fA-F]{2})";
-var REGEX_HEX_4 = new RegExp("".concat(HEX_START).concat(HEX_INT_SINGLE).concat(HEX_INT_SINGLE).concat(HEX_INT_SINGLE).concat(HEX_INT_SINGLE, "$"));
-var REGEX_HEX_8 = new RegExp("".concat(HEX_START).concat(HEX_INT_DOUBLE).concat(HEX_INT_DOUBLE).concat(HEX_INT_DOUBLE).concat(HEX_INT_DOUBLE, "$"));
 
 var TransparencyPlugin = function TransparencyPlugin(iro, pluginOptions) {
   var TransparencySlider = Object(_TransparencySlider_jsx__WEBPACK_IMPORTED_MODULE_0__["default"])(iro.ui, iro.util);
@@ -324,29 +305,9 @@ var TransparencyPlugin = function TransparencyPlugin(iro, pluginOptions) {
   var set = iro.Color.prototype.set;
 
   iro.Color.prototype.set = function (value) {
-    var isString = typeof value === 'string';
     var isObject = _typeof(value) === 'object';
 
-    if (isString && /^(?:#?|0x?)[0-9a-fA-F]{8}$/.test(value)) {
-      this.hex8String = value;
-    } else if (isString && /^(?:#?|0x?)[0-9a-fA-F]{4}$/.test(value)) {
-      var match;
-
-      if (match = REGEX_HEX_4.exec(value)) {
-        this.rgba = {
-          r: parseHexInt(match[1]),
-          g: parseHexInt(match[2]),
-          b: parseHexInt(match[3]),
-          a: parseHexInt(match[4]) / 255
-        };
-      } else {
-        throw new Error('invalid hex8 string');
-      }
-    } else if (isString && /^rgba/.test(value)) {
-      this.rgbaString = value;
-    } else if (isString && /^hsla/.test(value)) {
-      this.hlsaString = value;
-    } else if (isObject && 'r' in value && 'g' in value && 'b' in value && 'a' in value) {
+    if (isObject && 'r' in value && 'g' in value && 'b' in value && 'a' in value) {
       this.rgba = value;
     } else if (isObject && 'h' in value && 's' in value && 'v' in value && 'a' in value) {
       this.hsva = value;
@@ -359,23 +320,29 @@ var TransparencyPlugin = function TransparencyPlugin(iro, pluginOptions) {
 
 
   Object.defineProperties(iro.Color.prototype, {
+    hsva: {
+      get: function get() {
+        var value = this._value;
+        return {
+          h: value.h,
+          s: value.s,
+          v: value.v,
+          a: value.a
+        };
+      },
+      set: function set(value) {
+        this.hsv = value;
+      }
+    },
     alpha: {
       get: function get() {
-        var hsv = this.hsv;
-        return hsv.a;
+        var a = this._value.a;
+        return a;
       },
       set: function set(value) {
         this.hsv = _objectSpread({}, this.hsv, {
           a: value
         });
-      }
-    },
-    hsva: {
-      get: function get() {
-        return this.hsv;
-      },
-      set: function set(value) {
-        this.hsv = value;
       }
     },
     rgba: {
@@ -416,18 +383,7 @@ var TransparencyPlugin = function TransparencyPlugin(iro, pluginOptions) {
         return "#".concat(intToHex(r)).concat(intToHex(g)).concat(intToHex(b)).concat(intToHex(Math.floor(a * 255)));
       },
       set: function set(value) {
-        var match;
-
-        if (match = REGEX_HEX_8.exec(value)) {
-          this.rgba = {
-            r: parseHexInt(match[1]),
-            g: parseHexInt(match[2]),
-            b: parseHexInt(match[3]),
-            a: parseHexInt(match[4]) / 255
-          };
-        } else {
-          throw new Error('invalid hex8 string');
-        }
+        this.hexString = value;
       }
     },
     rgbaString: {
@@ -437,22 +393,10 @@ var TransparencyPlugin = function TransparencyPlugin(iro, pluginOptions) {
             g = _this$rgba2.g,
             b = _this$rgba2.b,
             a = _this$rgba2.a;
-        return "rgba(".concat(r, ", ").concat(g, ", ").concat(b, ", ").concat(a, ")");
+        return "rgba(".concat(r, ", ").concat(g, ", ").concat(b, ", ").concat(a.toFixed(2), ")");
       },
       set: function set(value) {
-        var match;
-
-        if (match = REGEX_FUNCTIONAL_RGBA.exec(value)) {
-          console.log(match);
-          this.rgba = {
-            r: parseUnit(match[1], 255),
-            g: parseUnit(match[2], 255),
-            b: parseUnit(match[3], 255),
-            a: parseUnit(match[4], 1)
-          };
-        } else {
-          throw new Error('invalid rgba string');
-        }
+        this.rgbString = value;
       }
     },
     hslaString: {
@@ -462,27 +406,16 @@ var TransparencyPlugin = function TransparencyPlugin(iro, pluginOptions) {
             s = _this$hsla.s,
             l = _this$hsla.l,
             a = _this$hsla.a;
-        return "hsla(".concat(h, ", ").concat(s, "%, ").concat(l, "%, ").concat(a, ")");
+        return "hsla(".concat(h, ", ").concat(s, "%, ").concat(l, "%, ").concat(a.toFixed(2), ")");
       },
       set: function set(value) {
-        var match;
-
-        if (match = REGEX_FUNCTIONAL_HSLA.exec(value)) {
-          this.hsla = {
-            h: parseUnit(match[1], 360),
-            s: parseUnit(match[2], 100),
-            l: parseUnit(match[3], 100),
-            a: parseUnit(match[4], 1)
-          };
-        } else {
-          throw new Error('invalid hsla string');
-        }
+        this.hslString = value;
       }
     }
   });
   iro.ui.TransparencySlider = TransparencySlider;
   iro.transparencyPlugin = {
-    version: "1.0.1"
+    version: "1.0.2"
   };
 };
 

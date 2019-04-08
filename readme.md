@@ -32,7 +32,7 @@
 
 * Color picker transparency slider
 * Extends iro.js color API to add support for hsva, hsla, rgba, hex8 and hex4 colors
-* 8kb minified, or less than 2kB minified + gzipped
+* 7kb minified, or less than 2kB minified + gzipped
 
 <br/>
 
