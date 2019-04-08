@@ -84,7 +84,7 @@ const TransparencyPlugin = function(iro, pluginOptions) {
     rgbaString: {
       get: function() {
         let { r, g, b, a } = this.rgba;
-        return `rgba(${r}, ${g}, ${b}, ${a.toFixed(2)})`
+        return `rgba(${r}, ${g}, ${b}, ${a})`
       },
       set: function(value) {
         this.rgbString = value;
@@ -93,7 +93,7 @@ const TransparencyPlugin = function(iro, pluginOptions) {
     hslaString: {
       get: function() {
         let { h, s, l, a } = this.hsla;
-        return `hsla(${h}, ${s}%, ${l}%, ${a.toFixed(2)})`
+        return `hsla(${h}, ${s}%, ${l}%, ${a})`
       },
       set: function(value) {
         this.hslString = value;

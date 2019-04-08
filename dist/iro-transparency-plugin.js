@@ -393,7 +393,7 @@ var TransparencyPlugin = function TransparencyPlugin(iro, pluginOptions) {
             g = _this$rgba2.g,
             b = _this$rgba2.b,
             a = _this$rgba2.a;
-        return "rgba(".concat(r, ", ").concat(g, ", ").concat(b, ", ").concat(a.toFixed(2), ")");
+        return "rgba(".concat(r, ", ").concat(g, ", ").concat(b, ", ").concat(a, ")");
       },
       set: function set(value) {
         this.rgbString = value;
@@ -406,7 +406,7 @@ var TransparencyPlugin = function TransparencyPlugin(iro, pluginOptions) {
             s = _this$hsla.s,
             l = _this$hsla.l,
             a = _this$hsla.a;
-        return "hsla(".concat(h, ", ").concat(s, "%, ").concat(l, "%, ").concat(a.toFixed(2), ")");
+        return "hsla(".concat(h, ", ").concat(s, "%, ").concat(l, "%, ").concat(a, ")");
       },
       set: function set(value) {
         this.hslString = value;
