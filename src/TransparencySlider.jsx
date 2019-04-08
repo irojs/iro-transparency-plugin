@@ -10,7 +10,7 @@ export default function({ h, Slider, Handle }, { resolveUrl }) {
       const cornerRadius = sliderHeight / 2;
       const range = width - cornerRadius * 2
       const hslString = props.color.hslString;
-      const alpha = props.color.hsv.a;
+      const alpha = props.color.hsva.a;
 
       return (
         <svg 
